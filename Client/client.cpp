@@ -1,4 +1,4 @@
-#include <locale.h>
+﻿#include <locale.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -189,9 +189,14 @@ int GetContactList()
     return 0;
 }
 
-int server_ReceiveMsgCb(const wchar_t *msg)
+int server_ReceiveMsgCb(RpcContact_t rpcContact)
 {
-    wprintf(L"客户端收到消息: %s\n", msg);
+    wprintf(L"客户端收到消息: \n");
+    Contact_t contact = { 0 };
+    GetRpcContact(&contact, rpcContact);
+    wprintf(L"rpcContact: %p, age: %d, name: %s, mobile: %s, address: %s\n", &rpcContact, contact.age,
+            contact.name.c_str(), contact.mobile.c_str(), contact.address.c_str());
+
     return 0;
 }
 
@@ -206,7 +211,7 @@ BOOL WINAPI ctrlCHandler(DWORD /*signal*/)
     }
     RpcEndExcept;
 
-    exit(0);
+    return true;
 }
 
 int main()
@@ -261,14 +266,9 @@ int main()
     RpcEndExcept;
 
     // Free the memory allocated by a string
-    status = RpcStringFree(&pszStringBinding);
-    if (status)
-        exit(status);
+    RpcStringFree(&pszStringBinding);
 
     // Releases binding handle resources and disconnects from the server
-    status = RpcBindingFree(&hDemoBinding);
-    if (status)
-        exit(status);
-
-    exit(0);
+    RpcBindingFree(&hDemoBinding);
+    return 0;
 }

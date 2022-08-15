@@ -1,4 +1,4 @@
-#include <locale.h>
+﻿#include <locale.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -11,8 +11,9 @@
 
 using namespace std;
 
-HANDLE g_hEvent    = NULL;
-wchar_t g_msg[128] = { 0 };
+HANDLE g_hEvent           = NULL;
+wchar_t g_msg[128]        = { 0 };
+RpcContact_t g_RpcContact = { 0 };
 DWORD WINAPI ThreadMakeMsg(LPVOID argv);
 
 void server_Shutdown(void)
@@ -144,9 +145,9 @@ void server_EnableReceiveMsg()
     {
         // 调用客户端的回调函数
         while (true) {
-            WaitForSingleObject(g_hEvent, INFINITE);     // 等待消息
-            client_ReceiveMsgCb((const wchar_t *)g_msg); // 调用接收消息回调
-            ResetEvent(g_hEvent);                        // 重置消息状态
+            WaitForSingleObject(g_hEvent, INFINITE); // 等待消息
+            client_ReceiveMsgCb(g_RpcContact);       // 调用接收消息回调
+            ResetEvent(g_hEvent);                    // 重置消息状态
         }
     }
     RpcExcept(1)
@@ -162,7 +163,11 @@ DWORD WINAPI ThreadMakeMsg(LPVOID argv)
     DWORD count = 0;
     while (TRUE) {
         count = 100 + rand() % 2000;
-        wsprintf(g_msg, L"Message from Server(%ld)", count); // 生成消息
+        // wsprintf(g_msg, L"Message from Server(%ld)", count); // 生成消息
+        g_RpcContact.age     = count;
+        g_RpcContact.name    = SysAllocString(L"Name from Server");
+        g_RpcContact.mobile  = SysAllocString(L"123456789");
+        g_RpcContact.address = SysAllocString(L"Beijing China");
 
         SetEvent(g_hEvent); // 发送消息通知
         Sleep(count);       // 模拟消息生成间隔

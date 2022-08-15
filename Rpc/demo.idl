@@ -35,5 +35,5 @@ interface demo
     void Shutdown(void);
 
     void EnableReceiveMsg(void);
-    [callback] int ReceiveMsgCb([ in, string ] const wchar_t *msg);
+    [callback] int ReceiveMsgCb([ in ] RpcContact_t rpcContact);
 }
