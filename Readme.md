@@ -36,48 +36,30 @@ interface demo
 ```
 
 ### V2
-V2 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件如下：
+V2 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件新增：
 ```C
-[
-    uuid(50C2504F-1062-4CC3-B9F1-9329A3BE82F9),
-    version(1.0),
-    implicit_handle(handle_t hDemoBinding)
-]
-interface demo
-{
-    import "demo.h";
-
-    int SendString([in, string] const wchar_t* msg);
     int GetString([in, string] const wchar_t* inStr, [out, string] wchar_t outStr[128]);
-    void Shutdown(void);
-}
 ```
 
 ### V3
-V3 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件如下：
+V3 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件新增：
 ```C
-[
-    uuid(50C2504F-1062-4CC3-B9F1-9329A3BE82F9),
-    version(1.0),
-    implicit_handle(handle_t hDemoBinding)
-]
-
-interface demo
-{
-    import "demo.h";
-
     typedef struct RPCSTRING {
         unsigned long size;
         [ ptr, size_is(size), length_is(size) ] wchar_t str[*];
     } RPCSTRING_t;
     typedef RPCSTRING_t* PRPCSTRING;
 
-    int SendString([ in, string ] const wchar_t *msg);
-    int GetString([ in, string ] const wchar_t *inStr, [ out, string ] wchar_t outStr[128]);
     int GetVarString([ in, string ] const wchar_t *inStr, [ out ] PRPCSTRING *outStr);
+```
 
-    void Shutdown(void);
-}
+### V4
+V4 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件新增：
+```C
+    typedef RPCSTRING_t** PPRPCSTRING;
+
+    int GetVarStringList([ in, string ] const wchar_t *inStr, [out] int *pNum,
+                         [ out, size_is(, *pNum) ] PPRPCSTRING *outStrList);
 ```
 
 ## 从零创建工程
