@@ -143,6 +143,7 @@
     <Midl Include="..\Rpc\demo.idl">
       <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Rpc</OutputDirectory>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/ms_ext /prefix client "client_" server "server_" /app_config %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Rpc</AdditionalIncludeDirectories>
     </Midl>
   </ItemGroup>
   <ItemGroup>

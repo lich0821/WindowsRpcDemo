@@ -24,6 +24,7 @@ git clone https://gitee.com/lch0821/RpcDemo.git
 4. 在 `Server` 项目下添加筛选器 `Rpc`，并在 `Rpc` 下添加 `demo.idl`
 5. 修改 IDL 文件 `属性`（文件右键）：
     `输出目录`：`$(SolutionDir)Rpc`
+    `附加包含目录`：`$(SolutionDir)Rpc`
     `命令行`：`/ms_ext /prefix client "client_" server "server_" /app_config`
 6. 编译 IDL 文件（右键）
 7. 给 `server` 添加文件：

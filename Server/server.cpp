@@ -39,10 +39,10 @@ int main()
     setlocale(LC_ALL, "chs"); // 这是个大坑，不设置中文直接不见了。。。
     // Uses the protocol combined with the endpoint for receiving
     // remote procedure calls.
-    status = RpcServerUseProtseqEp(reinterpret_cast<RPC_WSTR>((RPC_WSTR)L"ncalrpc"), // Use TCP/IP protocol
-                                   RPC_C_LISTEN_MAX_CALLS_DEFAULT,                   // Backlog queue length for TCP/IP.
-                                   reinterpret_cast<RPC_WSTR>((RPC_WSTR)L"tmp_endpoint"), // TCP/IP port to use
-                                   NULL                                                   // No security
+    status = RpcServerUseProtseqEp(reinterpret_cast<RPC_WSTR>((RPC_WSTR)RPC_PROTSEQ), // Use TCP/IP protocol
+                                   RPC_C_LISTEN_MAX_CALLS_DEFAULT, // Backlog queue length for TCP/IP.
+                                   reinterpret_cast<RPC_WSTR>((RPC_WSTR)RPC_ENDPOINT), // TCP/IP port to use
+                                   NULL                                                // No security
     );
 
     if (status)

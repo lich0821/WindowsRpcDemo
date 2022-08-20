@@ -5,6 +5,8 @@
 ]
 interface demo
 {
+    import "demo.h";
+
     int SendString([in, string] const wchar_t* msg);
     void Shutdown(void);
 }

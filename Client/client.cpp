@@ -30,10 +30,10 @@ int main()
     // Creates a string binding handle.
     // This function is nothing more than a printf.
     // Connection is not done here.
-    status = RpcStringBindingCompose(NULL,                                             // UUID to bind to
-                                     reinterpret_cast<RPC_WSTR>((RPC_WSTR)L"ncalrpc"), // Use TCP/IP protocol
-                                     NULL,                                             // TCP/IP network address to use
-                                     reinterpret_cast<RPC_WSTR>((RPC_WSTR)L"tmp_endpoint"), // TCP/IP port to use
+    status = RpcStringBindingCompose(NULL,                                              // UUID to bind to
+                                     reinterpret_cast<RPC_WSTR>((RPC_WSTR)RPC_PROTSEQ), // Use TCP/IP protocol
+                                     NULL,                                              // TCP/IP network address to use
+                                     reinterpret_cast<RPC_WSTR>((RPC_WSTR)RPC_ENDPOINT), // TCP/IP port to use
                                      NULL,             // Protocol dependent network options to use
                                      &pszStringBinding // String binding output
     );
