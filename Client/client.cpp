@@ -60,8 +60,8 @@ int main()
             wprintf(L"消息发送失败！\n");
         }
 
-        // 发送完关闭通道
-        client_Shutdown();
+        system("pause");   // 暂停以显示结果
+        client_Shutdown(); // 发送完关闭通道
     }
     RpcExcept(1)
     {
