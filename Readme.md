@@ -17,6 +17,24 @@ git clone https://gitee.com/lch0821/RpcDemo.git
 
 也可以分别在两个命令窗口里执行 `Server.exe` 和 `Client.exe`。
 
+## 版本说明
+### V1
+V1实现了由Client向Server发送字符串，IDL文件如下：
+```C
+[
+    uuid(ed838ecd-8a1e-4da7-bfda-9f2d12d07893),
+    version(1.0),
+    implicit_handle(handle_t hDemoBinding)
+]
+interface demo
+{
+    import "demo.h";
+
+    int SendString([in, string] const wchar_t* msg);
+    void Shutdown(void);
+}
+```
+
 ## 从零创建工程
 1. 创建一个解决方案：`RpcDemo`，并保存到 `RpcDemo` 目录
 2. 创建两个项目：`Client` 和 `Server`，分别保存到 `RpcDemo/Client` 和 `RpcDemo/Server`
