@@ -19,7 +19,7 @@ git clone https://gitee.com/lch0821/RpcDemo.git
 
 ## 版本说明
 ### V1
-V1实现了由Client向Server发送字符串，IDL文件如下：
+V1 实现了由 Client 向 Server 发送字符串，IDL 文件如下：
 ```C
 [
     uuid(ed838ecd-8a1e-4da7-bfda-9f2d12d07893),
@@ -31,6 +31,24 @@ interface demo
     import "demo.h";
 
     int SendString([in, string] const wchar_t* msg);
+    void Shutdown(void);
+}
+```
+
+### V2
+V2 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件如下：
+```C
+[
+    uuid(ed838ecd-8a1e-4da7-bfda-9f2d12d07893),
+    version(1.0),
+    implicit_handle(handle_t hDemoBinding)
+]
+interface demo
+{
+    import "demo.h";
+
+    int SendString([in, string] const wchar_t* msg);
+    int GetString([in, string] const wchar_t* inStr, [out, string] wchar_t outStr[128]);
     void Shutdown(void);
 }
 ```
