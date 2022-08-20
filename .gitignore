@@ -1,0 +1,9 @@
+.*
+!.gitignore
+
+Debug/
+Release/
+
+Rpc/*_h.h
+Rpc/*_c.c
+Rpc/*_s.c

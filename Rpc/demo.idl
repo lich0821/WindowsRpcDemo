@@ -1,0 +1,10 @@
+[
+    uuid(ed838ecd-8a1e-4da7-bfda-9f2d12d07893),
+    version(1.0),
+    implicit_handle(handle_t hDemoBinding)
+]
+interface demo
+{
+    int SendString([in, string] const wchar_t* msg);
+    void Shutdown(void);
+}
