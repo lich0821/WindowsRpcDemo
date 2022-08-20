@@ -1,10 +1,13 @@
 #include <locale.h>
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 #include "demo_h.h"
 #pragma comment(lib, "Rpcrt4.lib")
 #pragma warning(disable : 4996)
+
+using namespace std;
 
 void server_Shutdown(void)
 {
@@ -37,7 +40,7 @@ int server_GetString(const wchar_t *inStr, wchar_t *outStr)
 
 int server_GetVarString(const wchar_t *inStr, PRPCSTRING *outStr)
 {
-    std::wstring rsp = std::wstring(inStr) + L"+我是你不知道长度的字符串";
+    wstring rsp = wstring(inStr) + L"+我是你不知道长度的字符串";
     wprintf(L"服务器收到消息：%s\n", inStr);
 
     size_t len   = rsp.length() * sizeof(wchar_t) + sizeof(RPCSTRING_t);
@@ -50,6 +53,38 @@ int server_GetVarString(const wchar_t *inStr, PRPCSTRING *outStr)
     p->size = rsp.size();
     wcsncpy(p->str, rsp.c_str(), rsp.size());
     *outStr = p;
+
+    return 0;
+}
+
+int server_GetVarStringList(const wchar_t *inStr, int *pNum, PPRPCSTRING *outStrList)
+{
+    wprintf(L"服务器收到消息：%s\n", inStr);
+    *pNum = 10;
+    vector<wstring> strVector;
+    for (int i = 0; i < *pNum; i++) {
+        strVector.push_back(wstring(inStr) + L"+我是你不知道长度的字符串+" + to_wstring(i));
+    }
+    PPRPCSTRING pp = (PPRPCSTRING)midl_user_allocate(*pNum * sizeof(RPCSTRING_t));
+    if (pp == NULL) {
+        wprintf(L"内存分配失败！\n");
+        return -1;
+    }
+    int index = 0;
+    for (auto it = strVector.begin(); it != strVector.end(); it++) {
+        size_t len   = (*it).length() * sizeof(wchar_t) + sizeof(RPCSTRING_t);
+        PRPCSTRING p = (PRPCSTRING)midl_user_allocate(len);
+        if (p == NULL) {
+            wprintf(L"内存分配失败！\n");
+            return -2;
+        }
+
+        p->size = (*it).size();
+        wcsncpy(p->str, (*it).c_str(), (*it).size());
+        pp[index++] = p;
+    }
+
+    *outStrList = pp;
 
     return 0;
 }
