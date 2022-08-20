@@ -3,6 +3,20 @@
 * VS2019 社区版（16.11.4）
 * Windows 10 企业版 LTSC（1809）【PVE 虚拟机】
 
+## 快速开始
+### 克隆项目
+```sh
+git clone https://gitee.com/lch0821/RpcDemo.git
+```
+
+### 编译项目
+双击 `RpcDemo.sln` 打开工程，右键，选择 `生成解决方案`（快捷键：`Ctrl+Shift+B`）。
+
+### 运行项目
+进入项目目录下的 `Debug`，先打开 `Server.exe`，再打开 `Client.exe`，即可看到消息发送情况。
+
+也可以分别在两个命令窗口里执行 `Server.exe` 和 `Client.exe`。
+
 ## 从零创建工程
 1. 创建一个解决方案：`RpcDemo`，并保存到 `RpcDemo` 目录
 2. 创建两个项目：`Client` 和 `Server`，分别保存到 `RpcDemo/Client` 和 `RpcDemo/Server`
