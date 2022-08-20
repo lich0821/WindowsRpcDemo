@@ -1,5 +1,6 @@
 #include <locale.h>
 #include <stdio.h>
+#include <string>
 
 #include "demo_h.h"
 #pragma comment(lib, "Rpcrt4.lib")
@@ -12,7 +13,7 @@ int SendString(const wchar_t *msg)
     RpcExcept(1)
     {
         ulCode = RpcExceptionCode();
-        printf("main: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
+        printf("SendString: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
     }
     RpcEndExcept;
     if (ret != 0) {
@@ -29,13 +30,44 @@ int GetString(const wchar_t *inStr, wchar_t *outStr)
     RpcExcept(1)
     {
         ulCode = RpcExceptionCode();
-        printf("main: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
+        printf("GetString: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
     }
     RpcEndExcept;
     if (ret != 0) {
         wprintf(L"获取消息失败: %d\n", ret);
     }
     return ret;
+}
+
+PRPCSTRING innerGetVarString()
+{
+    int ret              = -1;
+    PRPCSTRING outStr    = NULL;
+    unsigned long ulCode = 0;
+    RpcTryExcept { ret = client_GetVarString(L"GetVarString from 客户端", &outStr); }
+    RpcExcept(1)
+    {
+        ulCode = RpcExceptionCode();
+        printf("GetVarString: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
+    }
+    RpcEndExcept;
+    if (ret != 0) {
+        wprintf(L"GetVarString失败: %d\n", ret);
+        return NULL;
+    }
+
+    return outStr;
+}
+
+int GetVarString()
+{
+    PRPCSTRING p     = innerGetVarString();
+    p->str[p->size]  = L'\0';
+    std::wstring str = std::wstring(p->str);
+    midl_user_free(p);
+    wprintf(L"获取结果：[%d-%d-%d]%s\n", str.size(), str.length(), str.capacity(), str.c_str());
+
+    return 0;
 }
 
 BOOL WINAPI ctrlCHandler(DWORD /*signal*/)
@@ -86,7 +118,7 @@ int main()
 
     SendString(L"Hello from 客户端");
     GetString(L"GetString from 客户端", buffer);
-    wprintf(L"获取结果：%s\n", buffer);
+    GetVarString();
 
     system("pause"); // 暂停以显示结果
     // 发送完关闭通道
