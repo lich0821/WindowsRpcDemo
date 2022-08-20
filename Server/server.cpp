@@ -1,4 +1,4 @@
-﻿#include <locale.h>
+#include <locale.h>
 #include <stdio.h>
 
 #include "demo_h.h"
