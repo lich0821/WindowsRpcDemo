@@ -8,5 +8,6 @@ interface demo
     import "demo.h";
 
     int SendString([in, string] const wchar_t* msg);
+    int GetString([in, string] const wchar_t* inStr, [out, string] wchar_t outStr[128]);
     void Shutdown(void);
 }

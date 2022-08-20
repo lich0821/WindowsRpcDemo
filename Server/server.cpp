@@ -26,6 +26,13 @@ int server_SendString(const wchar_t *msg)
     return 0;
 }
 
+int server_GetString(const wchar_t *inStr, wchar_t *outStr)
+{
+    wprintf(L"服务器收到消息：%s\n", inStr);
+    wsprintf(outStr, L"这是服务器返回的消息！");
+    return 0;
+}
+
 // Naive security callback.
 RPC_STATUS CALLBACK SecurityCallback(RPC_IF_HANDLE /*hInterface*/, void * /*pBindingHandle*/)
 {
@@ -48,7 +55,7 @@ int main()
     if (status)
         exit(status);
 
-    // Registers the hello interface and auto listen
+    // Registers the demo interface and auto listen
     // Equal to RpcServerRegisterIf + RpcServerListen
     status = RpcServerRegisterIf2(server_demo_v1_0_s_ifspec, // Interface to register.
                                   NULL,                      // Use the MIDL generated entry-point vector.
