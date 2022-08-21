@@ -147,6 +147,50 @@ int GetContact()
     return 0;
 }
 
+PPContact_t innerGetContactList(int *size)
+{
+    int ret              = -1;
+    unsigned long ulCode = 0;
+    PPContact_t contacts = NULL;
+    RpcTryExcept { ret = client_GetContactList(size, &contacts); }
+    RpcExcept(1)
+    {
+        ulCode = RpcExceptionCode();
+        printf("GetContactList: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
+    }
+    RpcEndExcept;
+    if (ret != 0) {
+        wprintf(L"GetContactList失败: %d\n", ret);
+        return NULL;
+    }
+
+    return contacts;
+}
+
+int GetContactList()
+{
+    int size       = 0;
+    PPContact_t pp = innerGetContactList(&size);
+    vector<Contact_t> vContact;
+    for (int i = 0; i < size; i++) {
+        Contact_t contact = *(PContact_t)pp[i];
+        vContact.push_back(contact);
+        SysFreeString(contact.name);
+        SysFreeString(contact.mobile);
+        SysFreeString(contact.address);
+        midl_user_free(pp[i]);
+    }
+    midl_user_free(pp);
+
+    wprintf(L"收到contact列表[%d]：\n", size);
+    for (auto it = vContact.begin(); it != vContact.end(); it++) {
+        wprintf(L"%d, %s, %s, %s\n", (*it).age, wstring((*it).name).c_str(), wstring((*it).mobile).c_str(),
+                wstring((*it).address).c_str());
+    }
+
+    return 0;
+}
+
 BOOL WINAPI ctrlCHandler(DWORD /*signal*/)
 {
     unsigned long ulCode = 0;
@@ -198,6 +242,7 @@ int main()
     GetVarString();
     GetVarStringList();
     GetContact();
+    GetContactList();
 
     system("pause"); // 暂停以显示结果
     // 发送完关闭通道

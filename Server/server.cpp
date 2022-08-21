@@ -92,10 +92,49 @@ int server_GetVarStringList(const wchar_t *inStr, int *pNum, PPRPCSTRING *outStr
 int server_GetContact(PContact_t contact)
 {
     wprintf(L"服务器收到contact：%p\n", contact);
-    contact->age = 100;
-    contact->name = SysAllocString(L"Name from Server");
-    contact->mobile = SysAllocString(L"123456789");
+    contact->age     = 100;
+    contact->name    = SysAllocString(L"Name from Server");
+    contact->mobile  = SysAllocString(L"123456789");
     contact->address = SysAllocString(L"Beijing China");
+
+    return 0;
+}
+
+int server_GetContactList(int *pNum, PPContact_t *contact)
+{
+    vector<Contact_t> vContact;
+    *pNum = 10;
+    for (int i = 0; i < *pNum; i++) {
+        wstring name    = L"name" + to_wstring(i);
+        wstring mobile  = L"mobile" + to_wstring(i);
+        wstring address = L"address" + to_wstring(i);
+        Contact_t contact
+            = { i, SysAllocStringLen(name.data(), name.size()), SysAllocStringLen(mobile.data(), mobile.size()),
+                SysAllocStringLen(address.data(), address.size()) };
+        vContact.push_back(contact);
+    }
+
+    PPContact_t pp = (PPContact_t)midl_user_allocate(*pNum * sizeof(Contact_t));
+    if (pp == NULL) {
+        wprintf(L"内存分配失败！\n");
+        return -1;
+    }
+    int index = 0;
+    for (auto it = vContact.begin(); it != vContact.end(); it++) {
+        PContact_t p = (PContact_t)midl_user_allocate(sizeof(Contact_t));
+        if (p == NULL) {
+            wprintf(L"内存分配失败！\n");
+            return -2;
+        }
+
+        p->age      = (*it).age;
+        p->name     = (*it).name;
+        p->mobile   = (*it).mobile;
+        p->address  = (*it).address;
+        pp[index++] = p;
+    }
+
+    *contact = pp;
 
     return 0;
 }

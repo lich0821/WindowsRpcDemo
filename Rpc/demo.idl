@@ -23,6 +23,7 @@ interface demo
         BSTR address;
     }Contact_t;
     typedef Contact_t* PContact_t;
+    typedef Contact_t** PPContact_t;
 
     int SendString([ in, string ] const wchar_t *msg);
     int GetString([ in, string ] const wchar_t *inStr, [ out, string ] wchar_t outStr[128]);
@@ -30,5 +31,6 @@ interface demo
     int GetVarStringList([ in, string ] const wchar_t *inStr, [out] int *pNum,
                          [ out, size_is(, *pNum) ] PPRPCSTRING *outStrList);
     int GetContact([out] PContact_t contact);
+    int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPContact_t *contact);
     void Shutdown(void);
 }
