@@ -89,6 +89,17 @@ int server_GetVarStringList(const wchar_t *inStr, int *pNum, PPRPCSTRING *outStr
     return 0;
 }
 
+int server_GetContact(PContact_t contact)
+{
+    wprintf(L"服务器收到contact：%p\n", contact);
+    contact->age = 100;
+    contact->name = SysAllocString(L"Name from Server");
+    contact->mobile = SysAllocString(L"123456789");
+    contact->address = SysAllocString(L"Beijing China");
+
+    return 0;
+}
+
 // Naive security callback.
 RPC_STATUS CALLBACK SecurityCallback(RPC_IF_HANDLE /*hInterface*/, void * /*pBindingHandle*/)
 {

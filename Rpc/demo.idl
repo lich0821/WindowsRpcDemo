@@ -6,6 +6,7 @@
 
 interface demo
 {
+    import "oaidl.idl";
     import "demo.h";
 
     typedef struct RPCSTRING {
@@ -15,10 +16,19 @@ interface demo
     typedef RPCSTRING_t* PRPCSTRING;
     typedef RPCSTRING_t** PPRPCSTRING;
 
+    typedef struct Contact {
+        int age;
+        BSTR name;
+        BSTR mobile;
+        BSTR address;
+    }Contact_t;
+    typedef Contact_t* PContact_t;
+
     int SendString([ in, string ] const wchar_t *msg);
     int GetString([ in, string ] const wchar_t *inStr, [ out, string ] wchar_t outStr[128]);
     int GetVarString([ in, string ] const wchar_t *inStr, [out] PRPCSTRING *outStr);
     int GetVarStringList([ in, string ] const wchar_t *inStr, [out] int *pNum,
                          [ out, size_is(, *pNum) ] PPRPCSTRING *outStrList);
+    int GetContact([out] PContact_t contact);
     void Shutdown(void);
 }

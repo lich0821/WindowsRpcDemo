@@ -115,6 +115,38 @@ int GetVarStringList()
     return 0;
 }
 
+int innerGetContact(Contact_t *contact)
+{
+    int ret              = -1;
+    unsigned long ulCode = 0;
+    RpcTryExcept { ret = client_GetContact(contact); }
+    RpcExcept(1)
+    {
+        ulCode = RpcExceptionCode();
+        printf("GetContact: Runtime reported exception 0x%lX (%ld)\n", ulCode, ulCode);
+    }
+    RpcEndExcept;
+    if (ret != 0) {
+        wprintf(L"GetContact失败: %d\n", ret);
+        return NULL;
+    }
+    return ret;
+}
+
+int GetContact()
+{
+    Contact_t contact = { 0 };
+    innerGetContact(&contact);
+
+    wprintf(L"contact: %p, age: %d, name: %s, mobile: %s, address: %s\n", &contact, contact.age,
+            wstring(contact.name).c_str(), wstring(contact.mobile).c_str(), wstring(contact.address).c_str());
+    SysFreeString(contact.name);
+    SysFreeString(contact.mobile);
+    SysFreeString(contact.address);
+
+    return 0;
+}
+
 BOOL WINAPI ctrlCHandler(DWORD /*signal*/)
 {
     unsigned long ulCode = 0;
@@ -165,6 +197,7 @@ int main()
     GetString(L"GetString from 客户端", buffer);
     GetVarString();
     GetVarStringList();
+    GetContact();
 
     system("pause"); // 暂停以显示结果
     // 发送完关闭通道
