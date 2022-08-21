@@ -72,7 +72,7 @@ int server_GetVarStringList(const wchar_t *inStr, int *pNum, PPRPCSTRING *outStr
     for (int i = 0; i < *pNum; i++) {
         strVector.push_back(wstring(inStr) + L"+我是你不知道长度的字符串+" + to_wstring(i));
     }
-    PPRPCSTRING pp = (PPRPCSTRING)midl_user_allocate(*pNum * sizeof(RPCSTRING_t));
+    PPRPCSTRING pp = (PPRPCSTRING)midl_user_allocate(*pNum * sizeof(PRPCSTRING));
     if (pp == NULL) {
         wprintf(L"内存分配失败！\n");
         return -1;
@@ -116,7 +116,7 @@ int server_GetContactList(int *pNum, PPRPCCONTACT *rpcContact)
         vContact.push_back(tmp);
     }
 
-    PPRPCCONTACT pp = (PPRPCCONTACT)midl_user_allocate(*pNum * sizeof(RpcContact_t));
+    PPRPCCONTACT pp = (PPRPCCONTACT)midl_user_allocate(*pNum * sizeof(PRPCCONTACT));
     if (pp == NULL) {
         wprintf(L"内存分配失败！\n");
         return -1;
