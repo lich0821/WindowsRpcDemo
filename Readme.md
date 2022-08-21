@@ -76,6 +76,14 @@ V5 实现了由 Client 向 Server 获取 `contact` 结构体（整型和字符�
     int GetContact([out] PContact_t contact);
 ```
 
+### V6
+V6 实现了由 Client 向 Server 获取 `contact` 结构体（整型和字符串），IDL 文件新增：
+```C
+    typedef Contact_t** PPContact_t;
+
+    int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPContact_t *contact);
+```
+
 ## 从零创建工程
 1. 创建一个解决方案：`RpcDemo`，并保存到 `RpcDemo` 目录
 2. 创建两个项目：`Client` 和 `Server`，分别保存到 `RpcDemo/Client` 和 `RpcDemo/Server`
