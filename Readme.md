@@ -62,6 +62,20 @@ V4 实现了由 Client 向 Server 发送字符串并获取字符串，IDL 文件
                          [ out, size_is(, *pNum) ] PPRPCSTRING *outStrList);
 ```
 
+### V5
+V5 实现了由 Client 向 Server 获取 `contact` 结构体（整型和字符串），IDL 文件新增：
+```C
+    typedef struct Contact {
+        int age;
+        BSTR name;
+        BSTR mobile;
+        BSTR address;
+    }Contact_t;
+    typedef Contact_t* PContact_t;
+
+    int GetContact([out] PContact_t contact);
+```
+
 ## 从零创建工程
 1. 创建一个解决方案：`RpcDemo`，并保存到 `RpcDemo` 目录
 2. 创建两个项目：`Client` 和 `Server`，分别保存到 `RpcDemo/Client` 和 `RpcDemo/Server`
