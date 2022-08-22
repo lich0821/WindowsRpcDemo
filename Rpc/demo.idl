@@ -33,4 +33,7 @@ interface demo
     int GetContact([out] PRPCCONTACT contact);
     int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPRPCCONTACT *contact);
     void Shutdown(void);
+
+    void EnableReceiveMsg(void);
+    [callback] int ReceiveMsgCb([ in, string ] const wchar_t *msg);
 }

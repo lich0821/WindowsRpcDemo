@@ -11,6 +11,10 @@
 
 using namespace std;
 
+HANDLE g_hEvent    = NULL;
+wchar_t g_msg[128] = { 0 };
+DWORD WINAPI ThreadMakeMsg(LPVOID argv);
+
 void server_Shutdown(void)
 {
     RPC_STATUS status = RPC_S_OK;
@@ -132,6 +136,41 @@ int server_GetContactList(int *pNum, PPRPCCONTACT *rpcContact)
     return 0;
 }
 
+void server_EnableReceiveMsg()
+{
+    unsigned long ulCode = 0;
+    wprintf(L"消息接收已打开\n");
+    RpcTryExcept
+    {
+        // 调用客户端的回调函数
+        while (true) {
+            WaitForSingleObject(g_hEvent, INFINITE);     // 等待消息
+            client_ReceiveMsgCb((const wchar_t *)g_msg); // 调用接收消息回调
+            ResetEvent(g_hEvent);                        // 重置消息状态
+        }
+    }
+    RpcExcept(1)
+    {
+        ulCode = RpcExceptionCode();
+        printf("Runtime reported exception 0x%lx = %ld\n", ulCode, ulCode);
+    }
+    RpcEndExcept
+}
+
+DWORD WINAPI ThreadMakeMsg(LPVOID argv)
+{
+    DWORD count = 0;
+    while (TRUE) {
+        count = 100 + rand() % 2000;
+        wsprintf(g_msg, L"Message from Server(%ld)", count); // 生成消息
+
+        SetEvent(g_hEvent); // 发送消息通知
+        Sleep(count);       // 模拟消息生成间隔
+    }
+
+    return 0;
+}
+
 // Naive security callback.
 RPC_STATUS CALLBACK SecurityCallback(RPC_IF_HANDLE /*hInterface*/, void * /*pBindingHandle*/)
 {
@@ -164,6 +203,8 @@ int main()
                                   (unsigned)-1,                   // Infinite max size of incoming data blocks.
                                   SecurityCallback);              // Naive security callback.
 
+    g_hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);     // 创建消息句柄
+    CreateThread(NULL, 0, ThreadMakeMsg, NULL, 0, NULL); // 新建线程，模拟消息生成
     while (1) {
         Sleep(10000); // 休眠，释放CPU
     }

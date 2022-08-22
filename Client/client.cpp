@@ -189,6 +189,12 @@ int GetContactList()
     return 0;
 }
 
+int server_ReceiveMsgCb(const wchar_t *msg)
+{
+    wprintf(L"客户端收到消息: %s\n", msg);
+    return 0;
+}
+
 BOOL WINAPI ctrlCHandler(DWORD /*signal*/)
 {
     unsigned long ulCode = 0;
@@ -242,9 +248,11 @@ int main()
     GetContact();
     GetContactList();
 
-    system("pause"); // 暂停以显示结果
-    // 发送完关闭通道
-    RpcTryExcept { client_Shutdown(); }
+    RpcTryExcept
+    {
+        // 建立RPC通道，让服务端能够调用客户端的回调函数。（该接口会被服务端阻塞直到异常或者Ctrl+C退出）
+        client_EnableReceiveMsg();
+    }
     RpcExcept(1)
     {
         ulCode = RpcExceptionCode();
