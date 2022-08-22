@@ -84,6 +84,22 @@ V6 实现了由 Client 向 Server 获取 `contact` 结构体（整型和字符�
     int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPContact_t *contact);
 ```
 
+### V7
+V7 添加了 Rpc 结构体（BSTR）和 vector 结构体（wstring）的转换方法，IDL 文件修改：
+```C
+    typedef struct RpcContact {
+        int age;
+        BSTR name;
+        BSTR mobile;
+        BSTR address;
+    }RpcContact_t;
+    typedef RpcContact_t* PRPCCONTACT;
+    typedef RpcContact_t** PPRPCCONTACT;
+
+    int GetContact([out] PRPCCONTACT contact);
+    int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPRPCCONTACT *contact);
+```
+
 ## 从零创建工程
 1. 创建一个解决方案：`RpcDemo`，并保存到 `RpcDemo` 目录
 2. 创建两个项目：`Client` 和 `Server`，分别保存到 `RpcDemo/Client` 和 `RpcDemo/Server`
