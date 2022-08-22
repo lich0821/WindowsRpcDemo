@@ -235,10 +235,10 @@ int main()
     if (status)
         exit(status);
 
-    // SendString(L"Hello from 客户端");
-    // GetString(L"GetString from 客户端", buffer);
-    // GetVarString();
-    // GetVarStringList();
+    SendString(L"Hello from 客户端");
+    GetString(L"GetString from 客户端", buffer);
+    GetVarString();
+    GetVarStringList();
     GetContact();
     GetContactList();
 
