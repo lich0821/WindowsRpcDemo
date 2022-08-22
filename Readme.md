@@ -100,6 +100,13 @@ V7 添加了 Rpc 结构体（BSTR）和 vector 结构体（wstring）的转换�
     int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPRPCCONTACT *contact);
 ```
 
+### V8
+V8 添加了回调，实现 Server 往 Client 发送消息，IDL 文件新增：
+```C
+    void EnableReceiveMsg(void);
+    [callback] int ReceiveMsgCb([ in, string ] const wchar_t *msg);
+```
+
 ## 从零创建工程
 1. 创建一个解决方案：`RpcDemo`，并保存到 `RpcDemo` 目录
 2. 创建两个项目：`Client` 和 `Server`，分别保存到 `RpcDemo/Client` 和 `RpcDemo/Server`
