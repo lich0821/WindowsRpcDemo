@@ -32,9 +32,15 @@
     <ClCompile Include="..\Rpc\demo_s.c">
       <Filter>Rpc</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Rpc\demo_h.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

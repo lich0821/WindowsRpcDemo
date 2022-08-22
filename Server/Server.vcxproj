@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Rpc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Rpc;$(SolutionDir)Common;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,11 +147,13 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\util.cpp" />
     <ClCompile Include="..\Rpc\demo_s.c" />
     <ClCompile Include="..\Rpc\rpc_memory.cpp" />
     <ClCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\util.h" />
     <ClInclude Include="..\Rpc\demo_h.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

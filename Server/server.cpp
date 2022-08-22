@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "demo_h.h"
+#include "util.h"
+
 #pragma comment(lib, "Rpcrt4.lib")
 #pragma warning(disable : 4996)
 
@@ -89,52 +91,43 @@ int server_GetVarStringList(const wchar_t *inStr, int *pNum, PPRPCSTRING *outStr
     return 0;
 }
 
-int server_GetContact(PContact_t contact)
+int server_GetContact(PRPCCONTACT pRpcContact)
 {
-    wprintf(L"服务器收到contact：%p\n", contact);
-    contact->age     = 100;
-    contact->name    = SysAllocString(L"Name from Server");
-    contact->mobile  = SysAllocString(L"123456789");
-    contact->address = SysAllocString(L"Beijing China");
+    wprintf(L"服务器收到pRpcContact：%p\n", pRpcContact);
+    pRpcContact->age     = 100;
+    pRpcContact->name    = SysAllocString(L"Name from Server");
+    pRpcContact->mobile  = SysAllocString(L"123456789");
+    pRpcContact->address = SysAllocString(L"Beijing China");
 
     return 0;
 }
 
-int server_GetContactList(int *pNum, PPContact_t *contact)
+int server_GetContactList(int *pNum, PPRPCCONTACT *rpcContact)
 {
     vector<Contact_t> vContact;
     *pNum = 10;
     for (int i = 0; i < *pNum; i++) {
-        wstring name    = L"name" + to_wstring(i);
-        wstring mobile  = L"mobile" + to_wstring(i);
-        wstring address = L"address" + to_wstring(i);
-        Contact_t contact
-            = { i, SysAllocStringLen(name.data(), name.size()), SysAllocStringLen(mobile.data(), mobile.size()),
-                SysAllocStringLen(address.data(), address.size()) };
-        vContact.push_back(contact);
+        Contact_t tmp = { i, L"name" + to_wstring(i), L"mobile" + to_wstring(i), L"address" + to_wstring(i) };
+        vContact.push_back(tmp);
     }
 
-    PPContact_t pp = (PPContact_t)midl_user_allocate(*pNum * sizeof(Contact_t));
+    PPRPCCONTACT pp = (PPRPCCONTACT)midl_user_allocate(*pNum * sizeof(RpcContact_t));
     if (pp == NULL) {
         wprintf(L"内存分配失败！\n");
         return -1;
     }
     int index = 0;
     for (auto it = vContact.begin(); it != vContact.end(); it++) {
-        PContact_t p = (PContact_t)midl_user_allocate(sizeof(Contact_t));
+        PRPCCONTACT p = (PRPCCONTACT)midl_user_allocate(sizeof(RpcContact_t));
         if (p == NULL) {
             wprintf(L"内存分配失败！\n");
             return -2;
         }
-
-        p->age      = (*it).age;
-        p->name     = (*it).name;
-        p->mobile   = (*it).mobile;
-        p->address  = (*it).address;
+        SetRpcContact(*it, p);
         pp[index++] = p;
     }
 
-    *contact = pp;
+    *rpcContact = pp;
 
     return 0;
 }

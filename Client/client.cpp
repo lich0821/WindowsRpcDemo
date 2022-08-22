@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "demo_h.h"
+#include "util.h"
+
 #pragma comment(lib, "Rpcrt4.lib")
 
 using namespace std;
@@ -115,7 +117,7 @@ int GetVarStringList()
     return 0;
 }
 
-int innerGetContact(Contact_t *contact)
+int innerGetContact(RpcContact_t *contact)
 {
     int ret              = -1;
     unsigned long ulCode = 0;
@@ -135,24 +137,23 @@ int innerGetContact(Contact_t *contact)
 
 int GetContact()
 {
-    Contact_t contact = { 0 };
-    innerGetContact(&contact);
+    RpcContact_t rpcContact = { 0 };
+    innerGetContact(&rpcContact);
 
-    wprintf(L"contact: %p, age: %d, name: %s, mobile: %s, address: %s\n", &contact, contact.age,
-            wstring(contact.name).c_str(), wstring(contact.mobile).c_str(), wstring(contact.address).c_str());
-    SysFreeString(contact.name);
-    SysFreeString(contact.mobile);
-    SysFreeString(contact.address);
+    Contact_t contact = { 0 };
+    GetRpcContact(&contact, rpcContact);
+    wprintf(L"rpcContact: %p, age: %d, name: %s, mobile: %s, address: %s\n", &rpcContact, contact.age,
+            contact.name.c_str(), contact.mobile.c_str(), contact.address.c_str());
 
     return 0;
 }
 
-PPContact_t innerGetContactList(int *size)
+PPRPCCONTACT innerGetContactList(int *size)
 {
-    int ret              = -1;
-    unsigned long ulCode = 0;
-    PPContact_t contacts = NULL;
-    RpcTryExcept { ret = client_GetContactList(size, &contacts); }
+    int ret                   = -1;
+    unsigned long ulCode      = 0;
+    PPRPCCONTACT ppRpcContact = NULL;
+    RpcTryExcept { ret = client_GetContactList(size, &ppRpcContact); }
     RpcExcept(1)
     {
         ulCode = RpcExceptionCode();
@@ -164,28 +165,25 @@ PPContact_t innerGetContactList(int *size)
         return NULL;
     }
 
-    return contacts;
+    return ppRpcContact;
 }
 
 int GetContactList()
 {
-    int size       = 0;
-    PPContact_t pp = innerGetContactList(&size);
+    int size        = 0;
+    PPRPCCONTACT pp = innerGetContactList(&size);
     vector<Contact_t> vContact;
     for (int i = 0; i < size; i++) {
-        Contact_t contact = *(PContact_t)pp[i];
+        Contact_t contact;
+        GetRpcContact(&contact, *pp[i]);
         vContact.push_back(contact);
-        SysFreeString(contact.name);
-        SysFreeString(contact.mobile);
-        SysFreeString(contact.address);
         midl_user_free(pp[i]);
     }
     midl_user_free(pp);
 
     wprintf(L"收到contact列表[%d]：\n", size);
     for (auto it = vContact.begin(); it != vContact.end(); it++) {
-        wprintf(L"%d, %s, %s, %s\n", (*it).age, wstring((*it).name).c_str(), wstring((*it).mobile).c_str(),
-                wstring((*it).address).c_str());
+        wprintf(L"%d, %s, %s, %s\n", (*it).age, (*it).name.c_str(), (*it).mobile.c_str(), (*it).address.c_str());
     }
 
     return 0;
@@ -237,10 +235,10 @@ int main()
     if (status)
         exit(status);
 
-    SendString(L"Hello from 客户端");
-    GetString(L"GetString from 客户端", buffer);
-    GetVarString();
-    GetVarStringList();
+    // SendString(L"Hello from 客户端");
+    // GetString(L"GetString from 客户端", buffer);
+    // GetVarString();
+    // GetVarStringList();
     GetContact();
     GetContactList();
 

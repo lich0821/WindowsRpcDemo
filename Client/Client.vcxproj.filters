@@ -21,6 +21,9 @@
     <ClInclude Include="..\Rpc\demo_h.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp">
@@ -31,6 +34,9 @@
     </ClCompile>
     <ClCompile Include="..\Rpc\rpc_memory.cpp">
       <Filter>Rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\util.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

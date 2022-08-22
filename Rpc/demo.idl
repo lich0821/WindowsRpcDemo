@@ -16,21 +16,21 @@ interface demo
     typedef RPCSTRING_t* PRPCSTRING;
     typedef RPCSTRING_t** PPRPCSTRING;
 
-    typedef struct Contact {
+    typedef struct RpcContact {
         int age;
         BSTR name;
         BSTR mobile;
         BSTR address;
-    }Contact_t;
-    typedef Contact_t* PContact_t;
-    typedef Contact_t** PPContact_t;
+    }RpcContact_t;
+    typedef RpcContact_t* PRPCCONTACT;
+    typedef RpcContact_t** PPRPCCONTACT;
 
     int SendString([ in, string ] const wchar_t *msg);
     int GetString([ in, string ] const wchar_t *inStr, [ out, string ] wchar_t outStr[128]);
     int GetVarString([ in, string ] const wchar_t *inStr, [out] PRPCSTRING *outStr);
     int GetVarStringList([ in, string ] const wchar_t *inStr, [out] int *pNum,
                          [ out, size_is(, *pNum) ] PPRPCSTRING *outStrList);
-    int GetContact([out] PContact_t contact);
-    int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPContact_t *contact);
+    int GetContact([out] PRPCCONTACT contact);
+    int GetContactList([out] int* pNum, [out, size_is(, *pNum)] PPRPCCONTACT *contact);
     void Shutdown(void);
 }
